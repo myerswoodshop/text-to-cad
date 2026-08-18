@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Trout Magnet Drift Lab</title>
+<style>
+html,body{margin:0;background:#07161d;color:white;font-family:system-ui;height:100%;overflow:hidden}#load{height:100%;display:grid;place-items:center;text-align:center;padding:24px;box-sizing:border-box}b{font-size:22px}small{opacity:.72}
+</style>
+<div id="load"><div><b>Loading Trout Magnet Drift Lab…</b><br><small>Turn your phone sideways to play.</small></div></div>
+<script>
+(async()=>{
+  try{
+    const names=['p00.txt','p01.txt','p02.txt','p03.txt','p04.txt','p05.txt','p06.txt','p07.txt','p08.txt'];
+    const parts=await Promise.all(names.map(n=>fetch(n,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(n+' '+r.status);return r.text()})));
+    const bytes=Uint8Array.from(atob(parts.join('')),c=>c.charCodeAt(0));
+    if(!('DecompressionStream' in window)) throw new Error('Safari needs to be updated to play this hosted build.');
+    const ds=new DecompressionStream('gzip');
+    const html=await new Response(new Blob([bytes]).stream().pipeThrough(ds)).text();
+    document.open();document.write(html);document.close();
+  }catch(e){document.getElementById('load').innerHTML='<div><b>Could not load the game.</b><br><small>'+e.message+'</small></div>'}
+})();
+</script>
